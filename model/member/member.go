@@ -9,5 +9,5 @@ type Member struct {
 	Age         int    `json:"Age"`
 	PhoneNumber int    `json:"PhoneNumber"`
 	Address     string `json:"Address"`
-	term        int    `json:"term"`
+	Term        int    `json:"term"`
 }
