@@ -10,6 +10,6 @@ func PutCourseList(ob course.Course) {
 
 //GetCourseList asd
 func GetCourseList() *list.List {
-	return &courseList
+	return &courseListz
 }
 */
