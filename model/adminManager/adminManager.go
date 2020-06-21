@@ -1,4 +1,4 @@
-package coursemanager
+package adminmanager
 
 import (
 	"GymManagement/model/course"

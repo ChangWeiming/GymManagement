@@ -1,10 +1,6 @@
-package coursemanager
+package coachmanager
 
-import (
-	"GymManagement/model/course"
-	"container/list"
-)
-
+/*
 var courseList list.List
 
 func PutCourseList(ob course.Course) {
@@ -12,6 +8,8 @@ func PutCourseList(ob course.Course) {
 
 }
 
+//GetCourseList asd
 func GetCourseList() *list.List {
 	return &courseList
 }
+*/

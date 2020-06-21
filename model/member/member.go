@@ -2,12 +2,12 @@ package member
 
 //Member member info
 type Member struct {
-	ID          int    `json:"Id"`
-	Name        string `json:"Name"`
-	Gender      string `json:"Gender"`
-	Password    string `json:"Password"`
-	Age         int    `json:"Age"`
-	PhoneNumber int    `json:"PhoneNumber"`
-	Address     string `json:"Address"`
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Gender      string `json:"gender"`
+	Password    string `json:"password"`
+	Age         int    `json:"age"`
+	PhoneNumber int    `json:"phone_number"`
+	Address     string `json:"address"`
 	Term        int    `json:"term"`
 }
