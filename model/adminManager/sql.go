@@ -44,10 +44,10 @@ func getAdmin(administrator *admin.Admin) (map[string]string, error) {
 
 func putAdmin(administrator *admin.Admin) error {
 	db := mysql.GetDB()
-	if stmt, err := db.Prepare("UPDATE admin SET name = ?, password = ?, phone_number = ?)"); err != nil {
+	if stmt, err := db.Prepare("UPDATE admin SET name = ?, password = ?, phone_number = ? WHERE id = ?"); err != nil {
 		return err
 	} else {
-		_, err := stmt.Exec(administrator.Name, administrator.Password, administrator.PhoneNumber)
+		_, err := stmt.Exec(administrator.Name, administrator.Password, administrator.PhoneNumber, administrator.ID)
 		if err != nil {
 			return err
 		}

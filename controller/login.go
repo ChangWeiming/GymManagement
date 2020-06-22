@@ -11,17 +11,26 @@ import (
 
 type loginPair struct {
 	Username string `json:"phone_number"`
-	Password string `json:"passowrd"`
+	Password string `json:"password"`
 }
 
 func passwordAuth(pair *loginPair, role string) (int, error) {
 	db := mysql.GetDB()
-	res, err := db.Query("SELECT password,id FROM "+role+" WHRER phone_number = ?", pair.Username)
+
+	//avoid sql injection
+	for _, x := range pair.Username {
+		if x < '0' || x > '9' {
+			return -1, nil
+		}
+	}
+
+	res, err := db.Query("SELECT password,id FROM " + role + " WHERE phone_number = " + pair.Username)
+
 	if err != nil {
 		return -1, err
 	}
 	ans, err := mysql.GetResult(res)
-
+	// fmt.Print(pair.Password)
 	if len(ans) == 0 {
 		return -1, nil
 	}
@@ -59,7 +68,7 @@ func loginMember(c *gin.Context) {
 		return
 	}
 	session := sessions.Default(c)
-	session.Set("id", ans)
+	session.Set("memberID", ans)
 	session.Set("username", pair.Username)
 	session.Save()
 	c.JSON(http.StatusOK, gin.H{
@@ -81,7 +90,7 @@ func loginCoach(c *gin.Context) {
 		return
 	}
 	session := sessions.Default(c)
-	session.Set("id", ans)
+	session.Set("coachID", ans)
 	session.Set("username", pair.Username)
 	session.Save()
 	c.JSON(http.StatusOK, gin.H{
@@ -103,7 +112,7 @@ func loginAdmin(c *gin.Context) {
 		return
 	}
 	session := sessions.Default(c)
-	session.Set("id", ans)
+	session.Set("adminID", ans)
 	session.Set("username", pair.Username)
 	session.Save()
 	c.JSON(http.StatusOK, gin.H{

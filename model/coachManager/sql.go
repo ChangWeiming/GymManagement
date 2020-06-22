@@ -8,7 +8,7 @@ import (
 
 func saveCoach(coachTmp *coach.Coach) error {
 	db := mysql.GetDB()
-	if stmt, err := db.Prepare("INSERT INTO admin (name, gender, password, age, phone_number, address, personal_profile) VALUES (?, ?, ?, ?, ?, ?, ?)"); err != nil {
+	if stmt, err := db.Prepare("INSERT INTO coach (name,gender, password, age, phone_number, address, personal_profile) VALUES (?, ?, ?, ?, ?, ?, ?)"); err != nil {
 		return err
 	} else {
 		_, err = stmt.Exec(coachTmp.Name, coachTmp.Gender, coachTmp.Password, coachTmp.Age, coachTmp.PhoneNumber, coachTmp.Address, coachTmp.PersonalProfile)
@@ -44,10 +44,10 @@ func getCoach(coachTmp *coach.Coach) (map[string]string, error) {
 
 func putCoach(coachTmp *coach.Coach) error {
 	db := mysql.GetDB()
-	if stmt, err := db.Prepare("UPDATE coach SET name = ?, gender = ?, password = ?, age = ?, phone_number = ?, address = ?, personal_profile = ?"); err != nil {
+	if stmt, err := db.Prepare("UPDATE coach SET name = ?, gender = ?, password = ?, age = ?, phone_number = ?, address = ?, personal_profile = ? WHERE id = ?"); err != nil {
 		return err
 	} else {
-		_, err = stmt.Exec(coachTmp.Name, coachTmp.Gender, coachTmp.Password, coachTmp.Age, coachTmp.PhoneNumber, coachTmp.Address, coachTmp.PersonalProfile)
+		_, err = stmt.Exec(coachTmp.Name, coachTmp.Gender, coachTmp.Password, coachTmp.Age, coachTmp.PhoneNumber, coachTmp.Address, coachTmp.PersonalProfile, coachTmp.ID)
 		if err != nil {
 			return err
 		}

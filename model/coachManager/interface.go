@@ -39,7 +39,7 @@ func CreateCoach(c *gin.Context) {
 func DeleteCoach(c *gin.Context) {
 	var coachTmp coach.Coach
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("coachID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
@@ -61,7 +61,7 @@ func DeleteCoach(c *gin.Context) {
 func GetCoach(c *gin.Context) {
 	var coachTmp coach.Coach
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("coachID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
@@ -81,8 +81,9 @@ func GetCoach(c *gin.Context) {
 // PutCoach create new coach
 func PutCoach(c *gin.Context) {
 	var coachTmp coach.Coach
+	c.ShouldBindJSON(&coachTmp)
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("coachID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",

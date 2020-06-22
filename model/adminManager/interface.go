@@ -39,7 +39,7 @@ func CreateAdmin(c *gin.Context) {
 func DeleteAdmin(c *gin.Context) {
 	var administrator admin.Admin
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("adminID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
@@ -61,7 +61,7 @@ func DeleteAdmin(c *gin.Context) {
 func GetAdmin(c *gin.Context) {
 	var administrator admin.Admin
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("adminID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
@@ -81,8 +81,9 @@ func GetAdmin(c *gin.Context) {
 // PutAdmin create new admin
 func PutAdmin(c *gin.Context) {
 	var administrator admin.Admin
+	c.ShouldBindJSON(&administrator)
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("adminID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",

@@ -44,10 +44,10 @@ func getMember(mem *member.Member) (map[string]string, error) {
 
 func putMember(mem *member.Member) error {
 	db := mysql.GetDB()
-	if stmt, err := db.Prepare("UPDATE member SET name = ?, password = ?, gender = ?, age = ?, phone_number = ?, address = ?, term = ?)"); err != nil {
+	if stmt, err := db.Prepare("UPDATE member SET name = ?, password = ?, gender = ?, age = ?, phone_number = ?, address = ?, term = ? WHERE id = ?"); err != nil {
 		return err
 	} else {
-		_, err := stmt.Exec(mem.Name, mem.Password, mem.Gender, mem.Age, mem.PhoneNumber, mem.Address, mem.Term)
+		_, err := stmt.Exec(mem.Name, mem.Password, mem.Gender, mem.Age, mem.PhoneNumber, mem.Address, mem.Term, mem.ID)
 		if err != nil {
 			return err
 		}

@@ -13,8 +13,8 @@ var db *sql.DB
 // RunMySQL connect mysql on the server.
 func RunMySQL() {
 	var err error
-	db, err = sql.Open("mysql", "Gym:gym2333@tcp(localhost:3306)/?charset=utf8")
-	res, err2 := db.Query("use Gym")
+	db, err = sql.Open("mysql", "gym:Gym2333@tcp(localhost:3306)/?charset=utf8")
+	res, err2 := db.Query("use GymDB")
 
 	if err2 != nil {
 		log.Println(err2)

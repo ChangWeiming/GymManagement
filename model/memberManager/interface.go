@@ -39,7 +39,7 @@ func CreateMember(c *gin.Context) {
 func DeleteMember(c *gin.Context) {
 	var mem member.Member
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("memberID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
@@ -61,7 +61,7 @@ func DeleteMember(c *gin.Context) {
 func GetMember(c *gin.Context) {
 	var mem member.Member
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("memberID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
@@ -81,8 +81,9 @@ func GetMember(c *gin.Context) {
 // PutMember create new member
 func PutMember(c *gin.Context) {
 	var mem member.Member
+	c.ShouldBindJSON(&mem)
 	session := sessions.Default(c)
-	id := session.Get("id")
+	id := session.Get("memberID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
