@@ -37,14 +37,14 @@ func CloseMySQL() {
 }
 
 //GetResult accept SQL query result return map of it
-func GetResult(query *sql.Rows) (map[int]map[string]string, error) {
+func GetResult(query *sql.Rows) ([]map[string]string, error) {
 	column, _ := query.Columns()              //读出查询出的列字段名
 	values := make([][]byte, len(column))     //values是每个列的值，这里获取到bye里
 	scans := make([]interface{}, len(column)) //因为每次查询出来的列是不定长的，用len(column)定住当次查询的长度
 	for i := range values {                   //让每一行数据都填充到[][]byte里面
 		scans[i] = &values[i]
 	}
-	results := make(map[int]map[string]string) //最后得到的map
+	results := make([]map[string]string, 0)
 	i := 0
 	for query.Next() {
 		if err := query.Scan(scans...); err != nil { //query.Scan查询出来的不定长值放到scans[i] = &values[i],也就是每行都放在values里
@@ -56,7 +56,7 @@ func GetResult(query *sql.Rows) (map[int]map[string]string, error) {
 			key := column[k]
 			row[key] = string(v)
 		}
-		results[i] = row //装入结果集中
+		results = append(results, row)
 		i++
 	}
 	return results, nil

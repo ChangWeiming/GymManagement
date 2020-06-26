@@ -35,19 +35,27 @@ func CreateCoach(c *gin.Context) {
 	})
 }
 
+type coachID struct {
+	ID int `json:"coachID"`
+}
+
 //DeleteCoach delete certain Coach
 func DeleteCoach(c *gin.Context) {
 	var coachTmp coach.Coach
 	session := sessions.Default(c)
-	id := session.Get("coachID")
+	id := session.Get("adminID")
 	if id == nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "failed",
-			"errlog": "not logged in",
+			"errlog": "not admin logged in",
 		})
 		return
 	}
-	coachTmp.ID = id.(int)
+
+	var coa coachID
+	c.ShouldBindJSON(coa)
+
+	coachTmp.ID = coa.ID
 	if err := deleteCoach(&coachTmp); err != nil {
 		handleErr(err, c)
 		return
@@ -99,5 +107,25 @@ func PutCoach(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "success",
 		})
+	}
+}
+
+//GetCoachList returns list of coach
+func GetCoachList(c *gin.Context) {
+	session := sessions.Default(c)
+	id := session.Get("adminID")
+	if id == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status": "failed",
+			"errlog": "not logged in",
+		})
+		return
+	}
+
+	if coachList, err := getCoachList(); err != nil {
+		handleErr(err, c)
+		return
+	} else {
+		c.JSON(http.StatusOK, coachList)
 	}
 }

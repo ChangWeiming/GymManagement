@@ -54,3 +54,16 @@ func putCoach(coachTmp *coach.Coach) error {
 	}
 	return nil
 }
+
+func getCoachList() ([]map[string]string, error) {
+	db := mysql.GetDB()
+	res, err := db.Query("SELECT * FROM coach")
+	if err != nil {
+		return nil, err
+	}
+	if retType, err := mysql.GetResult(res); err != nil {
+		return nil, err
+	} else {
+		return retType, nil
+	}
+}
