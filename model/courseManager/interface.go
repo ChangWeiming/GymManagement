@@ -189,6 +189,7 @@ func GetSelectedCourse(c *gin.Context) {
 		handleErr(err, c)
 		return
 	} else {
+		//fmt.Println(res)
 		c.JSON(http.StatusOK, res)
 	}
 }

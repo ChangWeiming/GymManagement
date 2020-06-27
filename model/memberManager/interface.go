@@ -2,8 +2,10 @@ package membermanager
 
 import (
 	"GymManagement/model/member"
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -22,11 +24,17 @@ func handleErr(err error, c *gin.Context) {
 //CreateMember create new member
 func CreateMember(c *gin.Context) {
 	var mem member.Member
+	/*
+		body, _ := ioutil.ReadAll(c.Request.Body)
+		fmt.Println(string(body))
+	*/
 	if err := c.ShouldBindJSON(&mem); err != nil {
+		fmt.Print("err1")
 		handleErr(err, c)
 		return
 	}
 	if err := saveMember(&mem); err != nil {
+		fmt.Print("err2")
 		handleErr(err, c)
 		return
 	}
@@ -36,7 +44,7 @@ func CreateMember(c *gin.Context) {
 }
 
 type memberID struct {
-	ID int `json:"memberID"`
+	ID string `json:"memberID"`
 }
 
 //DeleteMember delete certain member
@@ -52,8 +60,8 @@ func DeleteMember(c *gin.Context) {
 		return
 	}
 	var member memberID
-	c.ShouldBindJSON(member)
-	mem.ID = member.ID
+	c.ShouldBindJSON(&member)
+	mem.ID, _ = strconv.Atoi(member.ID)
 	if err := deleteMember(&mem); err != nil {
 		handleErr(err, c)
 		return
@@ -238,7 +246,8 @@ func PostLeaveTime(c *gin.Context) {
 //GetTerm return term of certain phone number
 func GetTerm(c *gin.Context) {
 	var mem member.Member
-	c.ShouldBindJSON(&mem)
+	mem.PhoneNumber = c.Param("phone_number")
+	//fmt.Println(mem.PhoneNumber)
 	if res, err := getTerm(&mem); err != nil {
 		handleErr(err, c)
 		return

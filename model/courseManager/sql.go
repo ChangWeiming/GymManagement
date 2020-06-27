@@ -97,7 +97,8 @@ func getCoachCourse(coachID int) ([]map[string]string, error) {
 
 func getSelectedCourse(memberID int) ([]map[string]string, error) {
 	db := mysql.GetDB()
-	res, err := db.Query("SELECT course.*,coach.name as coach_name FROM course,teach,coach WHERE course.id = teach.course_id AND teach.coach_id = coach.id AND coach.id = ?", memberID)
+	//fmt.Println(memberID)
+	res, err := db.Query("SELECT course.*,coach.name as coach_name FROM course,teach,coach,study WHERE course.id = teach.course_id AND teach.coach_id = coach.id AND study.course_id = course.id AND study.member_id = ?", memberID)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +111,7 @@ func getSelectedCourse(memberID int) ([]map[string]string, error) {
 
 func getUnelectCourse(memberID int) ([]map[string]string, error) {
 	db := mysql.GetDB()
-	unselectRes, err := db.Query("SELECT course.* FROM course,member WHERE course.id NOT IN (SELECT course_id FROM study WHERE member_id = ?)", memberID)
+	unselectRes, err := db.Query("SELECT course.* FROM course WHERE course.id NOT IN (SELECT course_id FROM study WHERE member_id = ?)", memberID)
 	if err != nil {
 		return nil, err
 	}

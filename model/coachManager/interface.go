@@ -4,6 +4,7 @@ import (
 	"GymManagement/model/coach"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -36,7 +37,7 @@ func CreateCoach(c *gin.Context) {
 }
 
 type coachID struct {
-	ID int `json:"coachID"`
+	ID string `json:"coachID"`
 }
 
 //DeleteCoach delete certain Coach
@@ -53,9 +54,9 @@ func DeleteCoach(c *gin.Context) {
 	}
 
 	var coa coachID
-	c.ShouldBindJSON(coa)
+	c.ShouldBindJSON(&coa)
 
-	coachTmp.ID = coa.ID
+	coachTmp.ID, _ = strconv.Atoi(coa.ID)
 	if err := deleteCoach(&coachTmp); err != nil {
 		handleErr(err, c)
 		return

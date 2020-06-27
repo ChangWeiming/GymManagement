@@ -6,6 +6,9 @@ import (
 	coachmanager "GymManagement/model/coachManager"
 	coursemanager "GymManagement/model/courseManager"
 	membermanager "GymManagement/model/memberManager"
+	"bytes"
+	"fmt"
+	"io/ioutil"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -17,6 +20,16 @@ func StartServer() {
 	router := gin.Default()
 	store := cookie.NewStore([]byte("test"))
 	router.Use(sessions.Sessions("userLogin", store))
+	router.Use(func(c *gin.Context) {
+		data, err := c.GetRawData()
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		fmt.Printf("data: %v\n", string(data))
+		//很关键
+		//把读过的字节流重新放到body
+		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
+	})
 	mysql.RunMySQL()
 
 	router.POST("/api/member", membermanager.CreateMember)
@@ -39,6 +52,7 @@ func StartServer() {
 	router.PUT("/api/coach", coachmanager.PutCoach)
 	router.PUT("/api/admin", adminmanager.PutAdmin)
 	router.PUT("/api/course", coursemanager.PutCourse)
+	router.PUT("/api/term", membermanager.PutTerm)
 
 	router.GET("/api/member", membermanager.GetMember)
 	router.GET("/api/coach", coachmanager.GetCoach)
@@ -46,9 +60,9 @@ func StartServer() {
 	router.GET("/api/courselist", coursemanager.GetCourseList)
 	router.GET("/api/memberlist", membermanager.GetMemberList)
 	router.GET("/api/coachlist", coachmanager.GetCoachList)
-	router.GET("/api/term", membermanager.GetTerm)
+	router.GET("/api/term/:phone_number", membermanager.GetTerm)
 	router.GET("/api/coachcourse", coursemanager.GetCoachCourse)
 	router.GET("/api/selectcourse", coursemanager.GetSelectedCourse)
-	router.GET("/unselectcourse", coursemanager.GetUnselectCourse)
+	router.GET("/api/unselectcourse", coursemanager.GetUnselectCourse)
 	router.Run(":8001")
 }
