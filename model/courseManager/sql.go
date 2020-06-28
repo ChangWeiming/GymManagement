@@ -7,14 +7,23 @@ import (
 	"strconv"
 )
 
-func saveCourse(courseTmp *course.Course) error {
+func saveCourse(courseTmp *course.Course, coachID string) error {
 	db := mysql.GetDB()
-	if stmt, err := db.Prepare("INSERT INTO course (name, time, people_number) VALUES (?, ?, ?)"); err != nil {
-		return err
-	} else {
-		_, err = stmt.Exec(courseTmp.Name, courseTmp.Time, courseTmp.PeopleNumber)
+	tx, err := db.Begin()
+	if err != nil {
 		return err
 	}
+	if r, err := tx.Exec("INSERT INTO course (name, time, people_number) VALUES (?, ?, ?)", courseTmp.Name, courseTmp.Time, courseTmp.PeopleNumber); err != nil {
+		return err
+	} else {
+		id, _ := r.LastInsertId()
+		if _, err := tx.Exec("INSERT INTO teach (course_id, coach_id) VALUES (?, ?)", id, coachID); err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	tx.Commit()
+	return nil
 }
 
 func deleteCourse(courseTmp *course.Course) error {
@@ -43,22 +52,27 @@ func getCourse(courseTmp *course.Course) (map[string]string, error) {
 	return json[0], nil
 }
 
-func putCourse(courseTmp *course.Course) error {
+func putCourse(courseTmp *course.Course, coachID string) error {
 	db := mysql.GetDB()
-	if stmt, err := db.Prepare("UPDATE course SET name = ?, time = ?, people_number = ? WHERE id = ?"); err != nil {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	if _, err := tx.Exec("UPDATE course SET name = ?, time = ?, people_number = ? WHERE id = ?", courseTmp.Name, courseTmp.Time, courseTmp.PeopleNumber, courseTmp.ID); err != nil {
 		return err
 	} else {
-		_, err := stmt.Exec(courseTmp.Name, courseTmp.Time, courseTmp.PeopleNumber, courseTmp.ID)
-		if err != nil {
+		if _, err := tx.Exec("UPDATE teach SET coach_id = ? WHERE course_id = ?", coachID, courseTmp.ID); err != nil {
+			tx.Rollback()
 			return err
 		}
 	}
+	tx.Commit()
 	return nil
 }
 
 func getCourseList() ([]map[string]string, error) {
 	db := mysql.GetDB()
-	res, err := db.Query("SELECT * FROM course")
+	res, err := db.Query("SELECT course.*,teach.course_id AS courseID FROM course,teach WHERE course.id = teach.course_id")
 	if err != nil {
 		return nil, err
 	}

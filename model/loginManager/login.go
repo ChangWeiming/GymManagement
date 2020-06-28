@@ -1,4 +1,4 @@
-package controller
+package loginmanager
 
 import (
 	mysql "GymManagement/MySQL"
@@ -54,7 +54,8 @@ func handleErr(err error, c *gin.Context) bool {
 	return false
 }
 
-func loginMember(c *gin.Context) {
+//LoginMember member login auth & sets cookie
+func LoginMember(c *gin.Context) {
 	var pair loginPair
 	c.ShouldBindJSON(&pair)
 	ans, err := passwordAuth(&pair, "member")
@@ -76,7 +77,8 @@ func loginMember(c *gin.Context) {
 	})
 }
 
-func loginCoach(c *gin.Context) {
+//LoginCoach coach login auth & sets cookie
+func LoginCoach(c *gin.Context) {
 	var pair loginPair
 	c.ShouldBindJSON(&pair)
 	ans, err := passwordAuth(&pair, "coach")
@@ -98,7 +100,8 @@ func loginCoach(c *gin.Context) {
 	})
 }
 
-func loginAdmin(c *gin.Context) {
+//LoginAdmin admin login auth & sets cookie
+func LoginAdmin(c *gin.Context) {
 	var pair loginPair
 	c.ShouldBindJSON(&pair)
 	ans, err := passwordAuth(&pair, "admin")

@@ -2,10 +2,11 @@ package controller
 
 import (
 	mysql "GymManagement/MySQL"
-	adminmanager "GymManagement/model/adminManager"
-	coachmanager "GymManagement/model/coachManager"
-	coursemanager "GymManagement/model/courseManager"
-	membermanager "GymManagement/model/memberManager"
+	adminManager "GymManagement/model/adminManager"
+	coachManager "GymManagement/model/coachManager"
+	courseManager "GymManagement/model/courseManager"
+	loginManager "GymManagement/model/loginManager"
+	memberManager "GymManagement/model/memberManager"
 	"bytes"
 	"fmt"
 	"io/ioutil"
@@ -32,37 +33,37 @@ func StartServer() {
 	})
 	mysql.RunMySQL()
 
-	router.POST("/api/member", membermanager.CreateMember)
-	router.POST("/api/coach", coachmanager.CreateCoach)
-	router.POST("/api/admin", adminmanager.CreateAdmin)
-	router.POST("/api/member/session", loginMember)
-	router.POST("/api/admin/session", loginAdmin)
-	router.POST("/api/coach/session", loginCoach)
-	router.POST("/api/course", coursemanager.CreateCourse)
-	router.POST("/api/selection", coursemanager.SelectCourse)
-	router.POST("/api/start_time", membermanager.PostStartTime)
-	router.POST("/api/leave_time", membermanager.PostLeaveTime)
+	router.POST("/api/member", memberManager.CreateMember)
+	router.POST("/api/coach", coachManager.CreateCoach)
+	router.POST("/api/admin", adminManager.CreateAdmin)
+	router.POST("/api/member/session", loginManager.LoginMember)
+	router.POST("/api/admin/session", loginManager.LoginAdmin)
+	router.POST("/api/coach/session", loginManager.LoginCoach)
+	router.POST("/api/course", courseManager.CreateCourse)
+	router.POST("/api/selection", courseManager.SelectCourse)
+	router.POST("/api/start_time", memberManager.PostStartTime)
+	router.POST("/api/leave_time", memberManager.PostLeaveTime)
 
-	router.DELETE("/api/member", membermanager.DeleteMember)
-	router.DELETE("/api/coach", coachmanager.DeleteCoach)
-	router.DELETE("/api/admin", adminmanager.DeleteAdmin)
-	router.DELETE("/api/course", coursemanager.DeleteCourse)
+	router.DELETE("/api/member", memberManager.DeleteMember)
+	router.DELETE("/api/coach", coachManager.DeleteCoach)
+	router.DELETE("/api/admin", adminManager.DeleteAdmin)
+	router.DELETE("/api/course", courseManager.DeleteCourse)
 
-	router.PUT("/api/member", membermanager.PutMember)
-	router.PUT("/api/coach", coachmanager.PutCoach)
-	router.PUT("/api/admin", adminmanager.PutAdmin)
-	router.PUT("/api/course", coursemanager.PutCourse)
-	router.PUT("/api/term", membermanager.PutTerm)
+	router.PUT("/api/member", memberManager.PutMember)
+	router.PUT("/api/coach", coachManager.PutCoach)
+	router.PUT("/api/admin", adminManager.PutAdmin)
+	router.PUT("/api/course", courseManager.PutCourse)
+	router.PUT("/api/term", memberManager.PutTerm)
 
-	router.GET("/api/member", membermanager.GetMember)
-	router.GET("/api/coach", coachmanager.GetCoach)
-	router.GET("/api/admin", adminmanager.GetAdmin)
-	router.GET("/api/courselist", coursemanager.GetCourseList)
-	router.GET("/api/memberlist", membermanager.GetMemberList)
-	router.GET("/api/coachlist", coachmanager.GetCoachList)
-	router.GET("/api/term/:phone_number", membermanager.GetTerm)
-	router.GET("/api/coachcourse", coursemanager.GetCoachCourse)
-	router.GET("/api/selectcourse", coursemanager.GetSelectedCourse)
-	router.GET("/api/unselectcourse", coursemanager.GetUnselectCourse)
+	router.GET("/api/member", memberManager.GetMember)
+	router.GET("/api/coach", coachManager.GetCoach)
+	router.GET("/api/admin", adminManager.GetAdmin)
+	router.GET("/api/courselist", courseManager.GetCourseList)
+	router.GET("/api/memberlist", memberManager.GetMemberList)
+	router.GET("/api/coachlist", coachManager.GetCoachList)
+	router.GET("/api/term/:phone_number", memberManager.GetTerm)
+	router.GET("/api/coachcourse", courseManager.GetCoachCourse)
+	router.GET("/api/selectcourse", courseManager.GetSelectedCourse)
+	router.GET("/api/unselectcourse", courseManager.GetUnselectCourse)
 	router.Run(":8001")
 }

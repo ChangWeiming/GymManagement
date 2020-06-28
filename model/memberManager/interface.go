@@ -117,18 +117,8 @@ func PutMember(c *gin.Context) {
 
 //PutTerm set term
 func PutTerm(c *gin.Context) {
-	session := sessions.Default(c)
-	id := session.Get("memberID")
-	if id == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "failed",
-			"errlog": "not logged in",
-		})
-		return
-	}
 	var mem member.Member
 	c.ShouldBindJSON(&mem)
-	mem.ID = id.(int)
 	if err := putTerm(&mem); err != nil {
 		handleErr(err, c)
 		return

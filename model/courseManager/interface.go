@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 func handleErr(err error, c *gin.Context) {
@@ -31,12 +32,20 @@ func CreateCourse(c *gin.Context) {
 		})
 		return
 	}
-
-	if err := c.ShouldBindJSON(&courseTmp); err != nil {
+	type coachID struct {
+		ID string `json:"coachID"`
+	}
+	if err := c.ShouldBindBodyWith(&courseTmp, binding.JSON); err != nil {
 		handleErr(err, c)
 		return
 	}
-	if err := saveCourse(&courseTmp); err != nil {
+	var courseCoach coachID
+	if err := c.ShouldBindBodyWith(&courseCoach, binding.JSON); err != nil {
+		handleErr(err, c)
+		return
+	}
+
+	if err := saveCourse(&courseTmp, courseCoach.ID); err != nil {
 		handleErr(err, c)
 		return
 	}
@@ -110,9 +119,21 @@ func PutCourse(c *gin.Context) {
 		})
 		return
 	}
-	c.ShouldBindJSON(&courseTmp)
-	//fmt.Println(courseTmp)
-	if err := putCourse(&courseTmp); err != nil {
+
+	type coachID struct {
+		ID string `json:"coachID"`
+	}
+	if err := c.ShouldBindBodyWith(&courseTmp, binding.JSON); err != nil {
+		handleErr(err, c)
+		return
+	}
+	var courseCoach coachID
+	if err := c.ShouldBindBodyWith(&courseCoach, binding.JSON); err != nil {
+		handleErr(err, c)
+		return
+	}
+
+	if err := putCourse(&courseTmp, courseCoach.ID); err != nil {
 		handleErr(err, c)
 		return
 	} else {
